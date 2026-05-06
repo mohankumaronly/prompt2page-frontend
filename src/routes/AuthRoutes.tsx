@@ -1,11 +1,11 @@
 import { Routes, Route } from 'react-router-dom';
-import Login from '../features/auth/pages/Login';
-import LoginOtp from '../features/auth/pages/LoginOtp';
 import ForgotPassword from '../features/auth/pages/ForgotPassword';
 import ResetPassword from '../features/auth/pages/ResetPassword';
 import { VerifyEmailPending } from '../features/auth/pages/VerifyEmailPending';
 import { Register } from '../features/auth/pages/Register';
 import { VerifyEmail } from '../features/auth/pages/VerifyEmail';
+import { Login } from '../features/auth/pages/Login';
+import { LoginOtp } from '../features/auth/pages/LoginOtp';
 
 export const AuthRoutes = () => {
   return (

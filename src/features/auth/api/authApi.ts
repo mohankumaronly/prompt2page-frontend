@@ -8,28 +8,29 @@ import type {
     ForgotPasswordRequest,
     ResetPasswordRequest,
     User,
+    RegisterResponse,
+    LoginResponse,
+    InitiateOtpResponse,
+    VerifyOtpResponse,
+    GetCurrentUserResponse,
 } from '../types/auth.types';
 
 export const authApi = {
   // Register new user
   register: (data: RegisterRequest) => 
-    apiClient.post<{ 
-      accessToken: string; 
-      refreshToken: string; 
-      message: string;
-    }>('/api/auth/register', data),
+    apiClient.post<RegisterResponse>('/api/auth/register', data),
   
-  // First login (email + password)
+  // Login (email + password) - returns accessToken for first login
   login: (data: LoginRequest) => 
-    apiClient.post<{ requiresOtp?: boolean; message?: string; email?: string }>('/api/auth/login', data),
+    apiClient.post<LoginResponse>('/api/auth/login', data),
   
-  // Initiate OTP for second login
+  // Initiate OTP for existing users (sends code to email)
   initiateOtp: (data: InitiateOtpRequest) => 
-    apiClient.post<{ message: string }>('/api/auth/login/initiate', data),
+    apiClient.post<InitiateOtpResponse>('/api/auth/login/initiate', data),
   
-  // Verify OTP for second login
+  // Verify OTP and complete login
   verifyOtp: (data: VerifyOtpRequest) => 
-    apiClient.post<{ user: User; message?: string }>('/api/auth/login/verify', data),
+    apiClient.post<VerifyOtpResponse>('/api/auth/login/verify', data),
   
   // Refresh access token (silent refresh)
   refreshToken: () => 
@@ -49,7 +50,7 @@ export const authApi = {
   
   // Get current logged-in user (checks cookie)
   getCurrentUser: () => 
-    apiClient.get<{ user: User }>('/api/auth/me'),
+    apiClient.get<GetCurrentUserResponse>('/api/auth/me'),
   
   // Verify email with token
   verifyEmail: (token: string) => 

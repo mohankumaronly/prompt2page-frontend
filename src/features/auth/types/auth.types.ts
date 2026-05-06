@@ -48,19 +48,23 @@ export interface ResendVerificationRequest {
 // ============ Response Types ============
 
 export interface RegisterResponse {
+  accessToken: string;
+  refreshToken: string;
   message: string;
-  userId?: string;
 }
 
 export interface LoginResponse {
-  requiresOtp?: boolean;
-  message?: string;
-  email?: string; // For OTP flow
+  accessToken?: string;
+  refreshToken?: string | null;
+  message: string;
 }
 
 export interface InitiateOtpResponse {
+  sessionId: string;
+  otpRequired: boolean;
   message: string;
-  expiresIn?: number; // OTP expiry in seconds
+  otpSentTo: string;
+  expiresIn: number;
 }
 
 export interface VerifyOtpResponse {

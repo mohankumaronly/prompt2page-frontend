@@ -3,15 +3,9 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthRoutes } from './AuthRoutes';
 import { ProtectedRoute } from './ProtectedRoute';
 import { PublicRoute } from './PublicRoute';
+import { Dashboard } from '../features/auth/pages/Dashboard';
 
-// Temporary placeholder components - replace with your actual pages
-const Dashboard = () => (
-  <div className="min-h-screen bg-gray-100 p-8">
-    <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-    <p className="mt-4 text-gray-600">Welcome to your dashboard!</p>
-  </div>
-);
-
+// Temporary placeholder components
 const Profile = () => (
   <div className="min-h-screen bg-gray-100 p-8">
     <h1 className="text-3xl font-bold text-gray-900">Profile</h1>
@@ -53,8 +47,8 @@ export const AppRoutes = () => {
         <Route path="/settings" element={<Settings />} />
       </Route>
 
-      {/* Redirect root to login */}
-      <Route path="/" element={<Navigate to="/auth/login" replace />} />
+      {/* Redirect root to dashboard if authenticated, else to login */}
+      <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
       {/* 404 - Not Found */}
       <Route path="*" element={<NotFound />} />

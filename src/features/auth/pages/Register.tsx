@@ -1,12 +1,11 @@
 // src/features/auth/pages/Register.tsx
-import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useRegister } from '../hooks/useRegister';
-import  AuthLayout  from '../components/AuthLayout';
-import  AuthCard  from '../components/AuthCard';
+import AuthLayout from '../components/AuthLayout';
+import AuthCard from '../components/AuthCard';
 import { Input } from '../../../components/ui/Input';
 import { Button } from '../../../components/ui/Button';
 import { SocialAuth } from '../components/SocialAuth';
@@ -39,8 +38,6 @@ type RegisterFormData = RegisterRequest & { confirmPassword: string };
 export const Register = () => {
   const navigate = useNavigate();
   const { mutate: register, isPending, error } = useRegister();
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const {
     register: registerField,
@@ -64,7 +61,6 @@ export const Register = () => {
     const { confirmPassword, ...registerData } = data;
     register(registerData, {
       onSuccess: () => {
-        // Redirect to verification pending page or login
         navigate('/auth/verify-email-pending', {
           state: { email: data.email }
         });
@@ -73,7 +69,6 @@ export const Register = () => {
   };
 
   const handleGoogleAuth = () => {
-    // Get Google auth URL from backend and redirect
     window.location.href = `${import.meta.env.VITE_API_BASE_URL}/api/auth/google`;
   };
 
@@ -114,29 +109,26 @@ export const Register = () => {
 
           <Input
             label="Password"
-            type={showPassword ? 'text' : 'password'}
+            type="password"
             placeholder="Create a strong password"
             {...registerField('password')}
             error={errors.password?.message}
             autoComplete="new-password"
             showPasswordToggle
-            onTogglePassword={() => setShowPassword(!showPassword)}
           />
 
-          {/* Password strength indicator */}
           {passwordValue && (
             <PasswordStrength password={passwordValue} />
           )}
 
           <Input
             label="Confirm Password"
-            type={showConfirmPassword ? 'text' : 'password'}
+            type="password"
             placeholder="Confirm your password"
             {...registerField('confirmPassword')}
             error={errors.confirmPassword?.message}
             autoComplete="new-password"
             showPasswordToggle
-            onTogglePassword={() => setShowConfirmPassword(!showConfirmPassword)}
           />
 
           {error && (
@@ -170,7 +162,7 @@ export const Register = () => {
 
           <p className="text-center text-sm text-gray-600 mt-6">
             Already have an account?{' '}
-            <Link to="/login" className="text-brand-600 hover:text-brand-700 font-medium">
+            <Link to="/auth/login" className="text-brand-600 hover:text-brand-700 font-medium">
               Sign in
             </Link>
           </p>
