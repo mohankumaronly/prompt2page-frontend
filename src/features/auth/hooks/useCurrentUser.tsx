@@ -5,51 +5,36 @@ import { useAuthStore } from '../stores/authStore';
 import { useEffect } from 'react';
 
 export const useCurrentUser = () => {
-  const { setAuth, setLoading, logout, isAuthenticated, isInitialized } = useAuthStore();
-
-  console.log('🔍 useCurrentUser - Auth State:', { isAuthenticated, isInitialized });
+  const { setAuth, setLoading, logout, isAuthenticated } = useAuthStore();
 
   const query = useQuery({
     queryKey: ['currentUser'],
     queryFn: async () => {
-      console.log('📡 Fetching current user from API...');
-      try {
-        const response = await authApi.getCurrentUser();
-        console.log('✅ API Response:', response);
-        return response;
-      } catch (error) {
-        console.error('❌ API Error:', error);
-        throw error;
+      console.log('🔍 Checking current user...');
+      const token = localStorage.getItem('accessToken');
+      
+      if (!token) {
+        console.log('No token found, skipping user fetch');
+        throw new Error('No token');
       }
+      
+      const response = await authApi.getCurrentUser();
+      return response;
     },
     retry: false,
-    staleTime: 5 * 60 * 1000,
-    enabled: !isAuthenticated && !isInitialized,
-  });
-
-  console.log('📊 Query Status:', { 
-    isLoading: query.isLoading, 
-    isSuccess: query.isSuccess, 
-    isError: query.isError,
-    status: query.status 
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    enabled: !isAuthenticated, // Only fetch if not authenticated
   });
 
   useEffect(() => {
-    console.log('🎯 useEffect triggered with:', { 
-      isLoading: query.isLoading, 
-      isSuccess: query.isSuccess, 
-      isError: query.isError 
-    });
-    
     if (query.isLoading) {
-      console.log('⏳ Setting loading state to true');
       setLoading(true);
     } else if (query.isSuccess) {
-      console.log('✅ Setting auth with user data');
+      console.log('✅ User authenticated:', query.data.data.user.email);
       setAuth(query.data.data.user);
       setLoading(false);
     } else if (query.isError) {
-      console.log('❌ Error - logging out');
+      console.log('❌ No authenticated user found');
       logout();
       setLoading(false);
     }

@@ -2,38 +2,49 @@
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { authApi } from '../api/authApi';
-import { useAuthStore } from '../stores/authStore';
 import { useToast } from '../../../hooks/useToast';
-import type { RegisterRequest } from '../types/auth.types';
+
+interface RegisterData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+}
 
 export const useRegister = () => {
   const navigate = useNavigate();
-  const { setAuth } = useAuthStore();
   const { showToast } = useToast();
 
   return useMutation({
-    mutationFn: (data: RegisterRequest) => authApi.register(data),
-    onSuccess: (response) => {
-      const { accessToken, refreshToken, message } = response.data;
+    mutationFn: async (data: RegisterData) => {
+      console.log('📝 Registering user:', data.email);
+      const response = await authApi.register(data);
+      return response;
+    },
+    onSuccess: (response, variables) => {
+      console.log('✅ Registration successful:', response.data);
+      showToast(response.data.message || 'Registration successful! Please verify your email.', 'success');
       
-      // Store tokens if your backend uses them
-      // For cookie-based auth, you might not need to store tokens
-      if (accessToken && refreshToken) {
-        localStorage.setItem('accessToken', accessToken);
-        localStorage.setItem('refreshToken', refreshToken);
+      // Store tokens if returned
+      if (response.data.accessToken) {
+        localStorage.setItem('accessToken', response.data.accessToken);
       }
       
-      showToast(message || 'Registration successful! Please verify your email.', 'success');
-      
-      // Option 1: Redirect to verification pending page
-      navigate('/verify-email-pending');
-      
-      // Option 2: Auto-login and redirect to dashboard
-      // setAuth(user);
-      // navigate('/dashboard');
+      // Navigate to verification pending page
+      navigate('/auth/verify-email-pending', {
+        state: { email: variables.email }
+      });
     },
     onError: (error: any) => {
-      const errorMessage = error.response?.data?.message || 'Registration failed. Please try again.';
+      console.error('❌ Registration error:', error);
+      let errorMessage = 'Registration failed. Please try again.';
+      
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.code === 'ERR_NETWORK') {
+        errorMessage = 'Cannot connect to server. Please check your connection.';
+      }
+      
       showToast(errorMessage, 'error');
     },
   });
