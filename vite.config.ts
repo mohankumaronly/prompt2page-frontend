@@ -1,16 +1,14 @@
+// vite.config.ts
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-
 export default defineConfig({
-  plugins: [
-    react(),
-  ],
+  plugins: [react()],
   server: {
     port: 3000,
     proxy: {
       '/api': {
-        target: 'https://prompt2page.onrender.com',
+        target: process.env.VITE_API_BASE_URL || 'https://prompt2page.onrender.com',
         changeOrigin: true,
       }
     }

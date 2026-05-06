@@ -1,10 +1,10 @@
-// src/routes/ProtectedRoute.tsx
+// src/routes/PublicRoute.tsx
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuthStore } from '../features/auth/stores/authStore';
 import Loader from '../components/ui/Loader';
 // import { Loader } from '../components/ui/Loader';
 
-export const ProtectedRoute = () => {
+export const PublicRoute = () => {
   const { isAuthenticated, isLoading } = useAuthStore();
 
   if (isLoading) {
@@ -15,5 +15,5 @@ export const ProtectedRoute = () => {
     );
   }
 
-  return isAuthenticated ? <Outlet /> : <Navigate to="/auth/login" replace />;
+  return !isAuthenticated ? <Outlet /> : <Navigate to="/dashboard" replace />;
 };
