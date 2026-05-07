@@ -1,6 +1,6 @@
 // src/features/auth/pages/Login.tsx
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -23,7 +23,7 @@ const loginSchema = z.object({
 type LoginFormData = LoginRequest;
 
 export const Login = () => {
-  const navigate = useNavigate();
+
   const { mutate: login, isPending, error } = useLogin();
   const [showPassword, setShowPassword] = useState(false);
 
