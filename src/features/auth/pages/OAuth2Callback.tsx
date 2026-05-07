@@ -9,7 +9,7 @@ import Loader from '../../../components/ui/Loader';
 export const OAuth2Callback = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { setAuth, setLoading } = useAuthStore();
+  const { setAuth} = useAuthStore();
   const { showToast } = useToast();
   const [debugInfo, setDebugInfo] = useState<string>('Initializing...');
 
