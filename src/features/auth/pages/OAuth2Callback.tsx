@@ -49,4 +49,4 @@ export const OAuth2Callback = () => {
       <Loader size="lg" text="Completing Google login..." />
     </div>
   );
-};
+};  
