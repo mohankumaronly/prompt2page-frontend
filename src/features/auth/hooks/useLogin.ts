@@ -1,5 +1,5 @@
-// src/features/auth/hooks/useLogin.ts
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+
+import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { authApi } from '../api/authApi';
 import { useAuthStore } from '../stores/authStore';
@@ -9,7 +9,6 @@ export const useLogin = () => {
   const navigate = useNavigate();
   const { setAuth, setLoading } = useAuthStore();
   const { showToast } = useToast();
-  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (data: { email: string; password: string }) => {
