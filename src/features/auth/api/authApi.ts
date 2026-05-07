@@ -5,7 +5,6 @@ import type {
     LoginRequest,
     ForgotPasswordRequest,
     ResetPasswordRequest,
-    User,
     RegisterResponse,
     LoginResponse,
     InitiateOtpResponse,
