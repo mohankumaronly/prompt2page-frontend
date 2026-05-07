@@ -1,4 +1,4 @@
-// src/features/auth/stores/authStore.ts - Add logging
+// src/features/auth/stores/authStore.ts
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { User } from '../types/auth.types';
@@ -16,7 +16,6 @@ interface AuthActions {
   updateUser: (user: User) => void;
   setLoading: (loading: boolean) => void;
   setInitialized: (initialized: boolean) => void;
-  clearAuth: () => void;
 }
 
 type AuthStoreType = AuthState & AuthActions;
@@ -26,11 +25,11 @@ export const useAuthStore = create<AuthStoreType>()(
     (set) => ({
       user: null,
       isAuthenticated: false,
-      isLoading: true,  // Start with loading true
+      isLoading: true,  // Start as true while checking
       isInitialized: false,
 
       setAuth: (user) => {
-        console.log('🔐 setAuth called with user:', user);
+        console.log('🔐 setAuth called with user:', user.email);
         set({
           user,
           isAuthenticated: true,
@@ -41,6 +40,7 @@ export const useAuthStore = create<AuthStoreType>()(
 
       logout: () => {
         console.log('🚪 logout called');
+        localStorage.removeItem('accessToken');
         set({
           user: null,
           isAuthenticated: false,
@@ -50,7 +50,7 @@ export const useAuthStore = create<AuthStoreType>()(
       },
 
       updateUser: (user) => {
-        console.log('📝 updateUser called with:', user);
+        console.log('📝 updateUser called');
         set((state) => ({
           user: { ...state.user, ...user },
           isAuthenticated: true,
@@ -65,16 +65,6 @@ export const useAuthStore = create<AuthStoreType>()(
       setInitialized: (initialized) => {
         console.log('✅ setInitialized called with:', initialized);
         set({ isInitialized: initialized });
-      },
-
-      clearAuth: () => {
-        console.log('🧹 clearAuth called');
-        set({
-          user: null,
-          isAuthenticated: false,
-          isLoading: false,
-          isInitialized: true,
-        });
       },
     }),
     {
@@ -91,21 +81,3 @@ export const useAuthUser = () => useAuthStore((state) => state.user);
 export const useIsAuthenticated = () => useAuthStore((state) => state.isAuthenticated);
 export const useIsLoading = () => useAuthStore((state) => state.isLoading);
 export const useIsInitialized = () => useAuthStore((state) => state.isInitialized);
-
-export const useAuthActions = () => {
-  const setAuth = useAuthStore((state) => state.setAuth);
-  const logout = useAuthStore((state) => state.logout);
-  const updateUser = useAuthStore((state) => state.updateUser);
-  const setLoading = useAuthStore((state) => state.setLoading);
-  const setInitialized = useAuthStore((state) => state.setInitialized);
-  const clearAuth = useAuthStore((state) => state.clearAuth);
-
-  return {
-    setAuth,
-    logout,
-    updateUser,
-    setLoading,
-    setInitialized,
-    clearAuth,
-  };
-};

@@ -1,5 +1,5 @@
 // src/features/auth/pages/LoginOtp.tsx
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { useOtpLogin } from '../hooks/useOtpLogin';
 import AuthLayout from '../components/AuthLayout';
@@ -12,39 +12,44 @@ export const LoginOtp = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const email = location.state?.email || '';
+  const password = location.state?.password || '';
   const { initiateOtp, verifyOtp } = useOtpLogin();
   const [otp, setOtp] = useState('');
   const { showToast } = useToast();
+  const hasInitiated = useRef(false);
 
   useEffect(() => {
-    if (!email) {
-      showToast('Please login first', 'error');
+    if (!email || !password) {
+      showToast('Session expired. Please login again.', 'error');
       navigate('/auth/login');
       return;
     }
-    // Auto-initiate OTP when page loads - calls /api/auth/login/initiate
-    console.log('Initiating OTP for email:', email);
-    initiateOtp.mutate({ email });
-  }, [email]);
+    
+    // ✅ REMOVE sessionStorage check - let backend handle rate limiting
+    if (!hasInitiated.current && !initiateOtp.isPending && !initiateOtp.isSuccess) {
+      hasInitiated.current = true;
+      console.log('📧 Initiating OTP for user:', email);
+      initiateOtp.mutate({ email, password });
+    }
+  }, []); // Empty dependency array - runs only once
 
   const handleVerifyOtp = () => {
     if (otp.length === 6) {
-      console.log('Verifying OTP for email:', email);
-      // Verify OTP - calls /api/auth/login/verify
-      verifyOtp.mutate({ email, otp });
+      console.log('🔐 Verifying OTP:', otp);
+      verifyOtp.mutate({ otp });
     }
   };
 
   const handleResendOtp = () => {
-    console.log('Resending OTP for email:', email);
-    initiateOtp.mutate({ email });
+    console.log('📧 Resending OTP for:', email);
+    initiateOtp.mutate({ email, password });
   };
 
   return (
     <AuthLayout>
       <AuthCard
         title="Verify Your Identity"
-        subtitle={`Enter the 6-digit code sent to your email`}
+        subtitle="Enter the 6-digit code sent to your email"
       >
         <div className="space-y-6">
           <div className="text-center">

@@ -3,8 +3,6 @@ import apiClient from '../../../services/apiClient';
 import type {
     RegisterRequest,
     LoginRequest,
-    InitiateOtpRequest,
-    VerifyOtpRequest,
     ForgotPasswordRequest,
     ResetPasswordRequest,
     User,
@@ -20,43 +18,43 @@ export const authApi = {
   register: (data: RegisterRequest) => 
     apiClient.post<RegisterResponse>('/api/auth/register', data),
   
-  // Login (email + password) - returns accessToken for first login
+  // Login (email + password) - first time login
   login: (data: LoginRequest) => 
     apiClient.post<LoginResponse>('/api/auth/login', data),
   
-  // Initiate OTP for existing users (sends code to email)
-  initiateOtp: (data: InitiateOtpRequest) => 
+  // ✅ Initiate OTP - Backend expects email and password
+  initiateOtp: (data: { email: string; password: string }) => 
     apiClient.post<InitiateOtpResponse>('/api/auth/login/initiate', data),
   
-  // Verify OTP and complete login
-  verifyOtp: (data: VerifyOtpRequest) => 
+  // ✅ Verify OTP - Backend expects sessionId and otpCode
+  verifyOtp: (data: { sessionId: string; otpCode: string }) => 
     apiClient.post<VerifyOtpResponse>('/api/auth/login/verify', data),
   
-  // Refresh access token (silent refresh)
+  // Refresh access token
   refreshToken: () => 
     apiClient.post<{ message: string }>('/api/auth/refresh'),
   
-  // Logout (clears cookie)
+  // Logout
   logout: () => 
     apiClient.post<{ message: string }>('/api/auth/logout'),
   
-  // Forgot password - send reset email
+  // Forgot password
   forgotPassword: (data: ForgotPasswordRequest) => 
     apiClient.post<{ message: string }>('/api/auth/forgot-password', data),
   
-  // Reset password with token
+  // Reset password
   resetPassword: (data: ResetPasswordRequest) => 
     apiClient.post<{ message: string }>('/api/auth/reset-password', data),
   
-  // Get current logged-in user (checks cookie)
+  // Get current user
   getCurrentUser: () => 
     apiClient.get<GetCurrentUserResponse>('/api/auth/me'),
   
-  // Verify email with token
+  // Verify email
   verifyEmail: (token: string) => 
     apiClient.post<{ message: string }>(`/api/auth/verify-email?token=${token}`),
   
-  // Resend verification email
+  // Resend verification
   resendVerification: (email: string) => 
     apiClient.post<{ message: string }>('/api/auth/resend-verification', { email }),
   

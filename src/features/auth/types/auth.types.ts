@@ -57,6 +57,8 @@ export interface LoginResponse {
   accessToken?: string;
   refreshToken?: string | null;
   message: string;
+  requiresOtp?: boolean;  
+  email?: string;
 }
 
 export interface InitiateOtpResponse {
@@ -68,8 +70,9 @@ export interface InitiateOtpResponse {
 }
 
 export interface VerifyOtpResponse {
-  user: User;
-  message?: string;
+  accessToken: string;
+  refreshToken?: string | null;
+  message: string;
 }
 
 export interface RefreshTokenResponse {

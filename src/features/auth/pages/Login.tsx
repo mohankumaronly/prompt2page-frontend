@@ -1,4 +1,5 @@
-// src/features/auth/pages/Login.tsx (updated to show message if OTP needed)
+// src/features/auth/pages/Login.tsx
+import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -24,6 +25,7 @@ type LoginFormData = LoginRequest;
 export const Login = () => {
   const navigate = useNavigate();
   const { mutate: login, isPending, error } = useLogin();
+  const [showPassword, setShowPassword] = useState(false);
 
   const {
     register,
@@ -39,6 +41,7 @@ export const Login = () => {
   });
 
   const onSubmit = (data: LoginFormData) => {
+    console.log('🔐 Login attempt for:', data.email);
     login(data);
   };
 
@@ -69,12 +72,13 @@ export const Login = () => {
 
           <Input
             label="Password"
-            type="password"
+            type={showPassword ? 'text' : 'password'}
             placeholder="Enter your password"
             {...register('password')}
             error={errors.password?.message}
             autoComplete="current-password"
             showPasswordToggle
+            onTogglePassword={() => setShowPassword(!showPassword)}
           />
 
           <div className="flex justify-between items-center">
