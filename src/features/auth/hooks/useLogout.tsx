@@ -19,7 +19,7 @@ export const useLogout = () => {
       showToast('Logged out successfully', 'success');
       navigate('/auth/login');
     },
-    onError: (error: any) => {
+    onError: () => {
       // Still logout locally even if API fails
       logout();
       queryClient.clear();
