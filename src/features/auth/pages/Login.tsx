@@ -45,8 +45,11 @@ export const Login = () => {
     login(data);
   };
 
+  // ✅ CORRECT Google OAuth URL - Spring Security's OAuth2 endpoint
   const handleGoogleAuth = () => {
-    window.location.href = `${import.meta.env.VITE_API_BASE_URL}/api/auth/google`;
+    // Use the correct OAuth2 endpoint, not /api/auth/google
+    const backendUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
+    window.location.href = `${backendUrl}/oauth2/authorization/google`;
   };
 
   const fillDemoCredentials = () => {

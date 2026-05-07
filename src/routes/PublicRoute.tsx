@@ -1,8 +1,6 @@
-// src/routes/PublicRoute.tsx
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuthStore } from '../features/auth/stores/authStore';
 import Loader from '../components/ui/Loader';
-// import { Loader } from '../components/ui/Loader';
 
 export const PublicRoute = () => {
   const { isAuthenticated, isLoading } = useAuthStore();

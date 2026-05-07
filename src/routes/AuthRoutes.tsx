@@ -6,6 +6,7 @@ import { Register } from '../features/auth/pages/Register';
 import { VerifyEmail } from '../features/auth/pages/VerifyEmail';
 import { Login } from '../features/auth/pages/Login';
 import { LoginOtp } from '../features/auth/pages/LoginOtp';
+import { OAuth2Callback } from '../features/auth/pages/OAuth2Callback';
 
 export const AuthRoutes = () => {
   return (
@@ -17,6 +18,7 @@ export const AuthRoutes = () => {
       <Route path="reset-password" element={<ResetPassword />} />
       <Route path="verify-email" element={<VerifyEmail />} />
       <Route path="verify-email-pending" element={<VerifyEmailPending />} />
+       <Route path="oauth2/callback" element={<OAuth2Callback />} />
     </Routes>
   );
 };
