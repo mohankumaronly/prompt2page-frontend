@@ -20,11 +20,6 @@ export const CodeTabs: React.FC<CodeTabsProps> = ({ onTabChange }) => {
     return '📄';
   };
 
-  const getFileColor = (fileName: string, isValid: boolean) => {
-    if (!isValid) return 'border-red-300 bg-red-50 text-red-700';
-    if (selectedFileName === fileName) return 'border-blue-500 bg-blue-50 text-blue-700';
-    return 'border-gray-300 bg-gray-50 text-gray-700 hover:bg-gray-100';
-  };
 
   const handleTabClick = (file: GeneratedFile) => {
     selectFileByName(file.fileName);
