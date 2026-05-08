@@ -12,7 +12,7 @@ export const ValidationBadge: React.FC<ValidationBadgeProps> = ({
   showErrors = false,
   size = 'md'
 }) => {
-  const { isValid, errors, warnings, fileName } = file;
+  const { isValid, errors, warnings } = file;
   
   const sizeClasses = {
     sm: 'text-xs px-1.5 py-0.5',
