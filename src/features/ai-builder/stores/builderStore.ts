@@ -13,6 +13,10 @@ const initialState = {
   lastGenerationTime: null,
   tokensUsed: null,
   allFilesValid: false,
+  // NEW UI states
+  isCodeVisible: true,      // Code panel visibility (default: visible)
+  isChatVisible: true,      // Chat panel visibility (default: visible)
+  conversationHistory: [],  // Store chat history
 };
 
 export const useBuilderStore = create<BuilderState>((set, get) => ({
@@ -21,7 +25,6 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
   setPrompt: (prompt: string) => set({ prompt }),
 
   setGeneratedFiles: (files: GeneratedFile[]) => {
-    // Select the first file by default if available
     const selectedFile = files.length > 0 ? files[0] : null;
     
     set({
@@ -66,7 +69,6 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
     
     set({ generatedFiles: updatedFiles });
     
-    // Update selected file if it's the one being modified
     if (selectedFile?.fileName === fileName) {
       set({
         selectedFileContent: newContent,
@@ -89,4 +91,21 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
       allFilesValid: updatedFiles.every(f => f.isValid),
     });
   },
+
+  // NEW UI actions
+  toggleCodeVisibility: () => set((state) => ({ isCodeVisible: !state.isCodeVisible })),
+  
+  toggleChatVisibility: () => set((state) => ({ isChatVisible: !state.isChatVisible })),
+  
+  setCodeVisible: (visible: boolean) => set({ isCodeVisible: visible }),
+  
+  setChatVisible: (visible: boolean) => set({ isChatVisible: visible }),
+  
+  addToConversation: (message: { role: 'user' | 'assistant', content: string }) => {
+    set((state) => ({
+      conversationHistory: [...state.conversationHistory, { ...message, timestamp: new Date().toISOString() }]
+    }));
+  },
+  
+  clearConversation: () => set({ conversationHistory: [] }),
 }));

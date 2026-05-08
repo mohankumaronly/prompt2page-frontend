@@ -91,6 +91,26 @@ export interface BuilderState {
   reset: () => void;
   updateFileContent: (fileName: string, newContent: string) => void;
   updateFileValidation: (fileName: string, isValid: boolean, errors: string[]) => void;
+
+  // NEW UI state fields
+  isCodeVisible: boolean;
+  isChatVisible: boolean;
+  conversationHistory: ConversationMessage[];
+  
+  // NEW UI actions
+  toggleCodeVisibility: () => void;
+  toggleChatVisibility: () => void;
+  setCodeVisible: (visible: boolean) => void;
+  setChatVisible: (visible: boolean) => void;
+  addToConversation: (message: { role: 'user' | 'assistant'; content: string }) => void;
+  clearConversation: () => void;
+}
+
+// NEW type for conversation messages
+export interface ConversationMessage {
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp: string;
 }
 
 // Preview state for iframe
