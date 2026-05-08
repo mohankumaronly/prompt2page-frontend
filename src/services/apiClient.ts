@@ -18,7 +18,15 @@ apiClient.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-    console.log(`📡 API Request: ${config.method?.toUpperCase()} ${config.url}`);
+    
+    // Increase timeout for AI generation requests
+    if (config.url?.includes('/api/generate') || config.url?.includes('/api/repair')) {
+      config.timeout = 60000; // 60 seconds for AI operations
+      console.log(`🤖 AI Request: ${config.method?.toUpperCase()} ${config.url} (timeout: 60s)`);
+    } else {
+      console.log(`📡 API Request: ${config.method?.toUpperCase()} ${config.url}`);
+    }
+    
     return config;
   },
   (error) => {
@@ -35,6 +43,12 @@ apiClient.interceptors.response.use(
   },
   async (error) => {
     const originalRequest = error.config;
+    
+    // Handle timeout errors
+    if (error.code === 'ECONNABORTED' && error.message.includes('timeout')) {
+      console.error('⏰ Request timeout - AI generation took too long');
+      error.userMessage = 'The AI took too long to respond. Please try a simpler prompt or try again.';
+    }
     
     // Handle 401 Unauthorized
     if (error.response?.status === 401 && !originalRequest._retry) {
@@ -69,7 +83,7 @@ apiClient.interceptors.response.use(
     // Handle network errors
     if (error.code === 'ERR_NETWORK') {
       console.error('❌ Network Error - Cannot connect to server');
-      error.userMessage = 'Cannot connect to server. Please check your connection.';
+      error.userMessage = 'Cannot connect to server. Please check if backend is running on port 8080.';
     }
     
     return Promise.reject(error);

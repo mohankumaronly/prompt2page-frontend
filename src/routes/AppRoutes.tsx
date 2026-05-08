@@ -4,6 +4,7 @@ import { AuthRoutes } from './AuthRoutes';
 import { ProtectedRoute } from './ProtectedRoute';
 import { PublicRoute } from './PublicRoute';
 import { Dashboard } from '../features/auth/pages/Dashboard';
+import { BuilderPage } from '../features/ai-builder/pages/BuilderPage';
 
 // Temporary placeholder components
 const Profile = () => (
@@ -43,6 +44,7 @@ export const AppRoutes = () => {
       {/* Protected routes - require authentication */}
       <Route element={<ProtectedRoute />}>
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/builder" element={<BuilderPage />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/settings" element={<Settings />} />
       </Route>
